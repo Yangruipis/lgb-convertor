@@ -1,0 +1,14 @@
+[tool.black]
+line-length = 100
+target-version = ["py37"]
+skip-string-normalization = true
+
+[tool.isort]
+profile = "black"
+line_length = 100
+src_paths = ["launcher/src"]
+
+[tool.pytest.ini_options]
+markers = [
+    "unitslow: marks unittests as slow (deselect with '-m \"not slow\"')",
+]
