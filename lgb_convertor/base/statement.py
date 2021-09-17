@@ -33,6 +33,12 @@ class Op(Enum):
     GT = '>'
 
 
+class ScalarStatement(Statement):
+    @initializer
+    def __init__(self, value):
+        pass
+
+
 class ScalarReturnStatement(Statement):
     @initializer
     def __init__(self, value):

@@ -12,10 +12,13 @@ from lgb_convertor.base.statement import (
     LGBStatement,
     Op,
     ScalarReturnStatement,
+    ScalarStatement,
 )
 
 
-def parse_one_tree(root, index, array_type='double', return_type='double'):
+def parse_one_tree(
+    root, index, array_type='double', return_type='double', func_name='predict_tree'
+):
     def inner(node, depth):
         if 'leaf_index' in node:
             return ScalarReturnStatement(node['leaf_value']).with_depth(depth)
@@ -24,8 +27,8 @@ def parse_one_tree(root, index, array_type='double', return_type='double'):
             # save as postfix expression
             postfix_exps = []
             postfix_exps += [
+                ScalarStatement(node['threshold']).with_depth(depth),
                 IndexStatement('arr', node['split_feature']).with_depth(depth),
-                node['threshold'],
                 Op(node['decision_type']),
             ]
 
@@ -38,9 +41,9 @@ def parse_one_tree(root, index, array_type='double', return_type='double'):
             left = inner(node['left_child'], depth + 1)
             right = inner(node['right_child'], depth + 1)
             condition = ConditionStatement(postfix_exps).with_depth(depth)
-            return LGBStatement(left, right, condition).with_depth(depth)
+            return LGBStatement(condition, left, right).with_depth(depth)
 
-    return FuncStatement(f'predictTree_{index}', ('arr',), ('float[]',), inner(root, 1)).with_depth(
+    return FuncStatement(f'{func_name}_{index}', ('arr',), ('float[]',), inner(root, 1)).with_depth(
         0
     )
 
