@@ -1,15 +1,13 @@
 # -*- coding: utf-8 -*-
 
-import os
-import json
-import sys
-
-
 import argparse
+import json
+import os
+import sys
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--lang', default='python3')
-parser.add_argument('--model-json', )
+parser.add_argument('--model-json',)
 args = parser.parse_args()
 
 
@@ -24,6 +22,5 @@ def main():
     print(code)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
-

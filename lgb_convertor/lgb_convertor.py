@@ -8,10 +8,11 @@ from lgb_convertor.base.statement import (
     ConditionStatement,
     FuncStatement,
     IndexStatement,
+    IsInStatement,
     IsNullStatement,
     LGBStatement,
     Op,
-    ScalarReturnStatement,
+    ReturnStatement,
     ScalarStatement,
 )
 
@@ -21,17 +22,27 @@ def parse_one_tree(
 ):
     def inner(node, depth):
         if 'leaf_index' in node:
-            return ScalarReturnStatement(node['leaf_value']).with_depth(depth)
+            return ReturnStatement(
+                ScalarStatement(node['leaf_value']).with_depth(depth)
+            ).with_depth(depth)
         else:
 
             # save as postfix expression
-            postfix_exps = [
-                ScalarStatement(node['threshold']).with_depth(depth),
-                IndexStatement('arr', node['split_feature']).with_depth(depth),
-                Op(node['decision_type']),
-            ]
+            if isinstance(node['threshold'], str) and '||' in node['threshold']:
+                postfix_exps = [
+                    IsInStatement(
+                        node['threshold'].split('||'),
+                        IndexStatement('arr', node['split_feature']).with_depth(depth),
+                    ).with_depth(depth)
+                ]
+            else:
+                postfix_exps = [
+                    ScalarStatement(node['threshold']).with_depth(depth),
+                    IndexStatement('arr', node['split_feature']).with_depth(depth),
+                    Op(node['decision_type']),
+                ]
 
-            if node.get('missing_type') == 'NaN':
+            if node.get('missing_type') == 'NaN' and node['default_left']:
                 postfix_exps += [
                     IsNullStatement(IndexStatement('arr', node['split_feature'])).with_depth(depth),
                     Op.OR,

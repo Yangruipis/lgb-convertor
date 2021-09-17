@@ -9,10 +9,11 @@ from lgb_convertor.base.statement import (
     ConditionStatement,
     FuncStatement,
     IndexStatement,
+    IsInStatement,
     IsNullStatement,
     LGBStatement,
     Op,
-    ScalarReturnStatement,
+    ReturnStatement,
     ScalarStatement,
     Statement,
 )
@@ -33,14 +34,17 @@ class Python3Convertor:
             return f'def {item.name}({",".join(item.args)}):\n{next_tab}{item.body}\n'
 
         if isinstance(item, LGBStatement):
-            return (
+            return str(
                 f'if {item.condition}:\n{next_tab}{item.left}\n{tab}else:\n{next_tab}{item.right}'
             )
 
         if isinstance(item, IsNullStatement):
-            return f'np.isnan({item.element})'
+            return f'np.isnan({item.value})'
 
-        if isinstance(item, ScalarReturnStatement):
+        if isinstance(item, IsInStatement):
+            return f'{item.value} in ({",".join(item.container)},)'
+
+        if isinstance(item, ReturnStatement):
             return f'return {item.value}'
 
         if isinstance(item, ScalarStatement):
@@ -61,7 +65,7 @@ class Python3Convertor:
                     right = stack.pop()
                     assert isinstance(peak, Op)
                     stack.append(f'( {left} {peak.value} {right} )')
-            return stack[-1]
+            return str(stack[-1])
 
 
 class Python3(Lang):

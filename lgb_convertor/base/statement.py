@@ -39,7 +39,7 @@ class ScalarStatement(Statement):
         pass
 
 
-class ScalarReturnStatement(Statement):
+class ReturnStatement(Statement):
     @initializer
     def __init__(self, value):
         pass
@@ -53,7 +53,13 @@ class IndexStatement(Statement):
 
 class IsNullStatement(Statement):
     @initializer
-    def __init__(self, element):
+    def __init__(self, value):
+        pass
+
+
+class IsInStatement(Statement):
+    @initializer
+    def __init__(self, container, value):
         pass
 
 

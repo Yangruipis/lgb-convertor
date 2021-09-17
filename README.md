@@ -1,7 +1,7 @@
-# LGB-convertor 
+# LGB-convertor
 
 lgbc is a tool that convert LightGBM(aka lgb) model to an if-else statement of each language. It is useful when deploy a LightGBM model without LightGBM package.
-  
+
 ## try
 
 ```bash
