@@ -15,9 +15,9 @@ TREE_JSON = {
     'left_child': {'leaf_index': 0, 'leaf_value': 0.1,},
     'right_child': {
         'split_feature': 0,
-        'threshold': 0.1,
+        'threshold': 0.5,
         'decision_type': '<=',
-        'left_child': {'leaf_index': 0, 'leaf_value': 0.1,},
+        'left_child': {'leaf_index': 0, 'leaf_value': 0.3,},
         'right_child': {'leaf_index': 1, 'leaf_value': 0.2,},
     },
 }
@@ -26,4 +26,7 @@ TREE_JSON = {
 def test_parse_one_tree():
     with convertor_registry(Python3Convertor()):
         res = parse_one_tree(TREE_JSON, 0)
-        print(res)
+        exec(str(res))
+        assert eval('predict_tree_0([0])') == 0.1
+        assert eval('predict_tree_0([0.2])') == 0.3
+        assert eval('predict_tree_0([0.6])') == 0.2

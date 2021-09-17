@@ -25,8 +25,7 @@ def parse_one_tree(
         else:
 
             # save as postfix expression
-            postfix_exps = []
-            postfix_exps += [
+            postfix_exps = [
                 ScalarStatement(node['threshold']).with_depth(depth),
                 IndexStatement('arr', node['split_feature']).with_depth(depth),
                 Op(node['decision_type']),

@@ -50,9 +50,10 @@ class Python3Convertor:
             return f'{item.container}[{item.idx}]'
 
         if isinstance(item, ConditionStatement):
+            postfix_exps = item.postfix_exps[:]
             stack = []
-            while item.postfix_exps:
-                peak = item.postfix_exps.pop(0)
+            while postfix_exps:
+                peak = postfix_exps.pop(0)
                 if isinstance(peak, Statement):
                     stack.append(peak)
                 else:
