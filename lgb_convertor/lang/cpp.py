@@ -39,6 +39,7 @@ class CPPConvertor:
 
         if isinstance(item, FuncStatement):
             return str(
+                f'#include <cmath>\n\n'
                 f'float {item.name}(float[] {",".join(item.args)})\n'
                 f'{{\n'
                 f'{item.body}\n'

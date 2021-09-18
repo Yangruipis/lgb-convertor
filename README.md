@@ -2,13 +2,23 @@
 
 lgbc is a tool that convert LightGBM(aka lgb) model to an if-else statement of each language. It is useful when deploy a LightGBM model without LightGBM package.
 
-## try
+
+## install
+
+```bash
+git clone https://github.com/Yangruipis/lgb-convertor.git && cd lgb-convertor
+
+python setup.py install
+```
+
+## try example
 
 ```bash
 
-python cli/lgbc.py --model-json example/test_model.json --lang python3 > code.py
-
+lgbc --model-json example/test_model.json --lang python3
 ```
+
+### output:
 
 ```python
 def predict_tree_0(arr):
@@ -104,4 +114,23 @@ def predict_tree_0(arr):
             else:
                 return -1.17163032150766
 
+```
+
+## run test
+
+```
+pip install -r requirements-dev.txt
+
+pytest tests
+```
+
+## extends and contribute
+
+### support more LANGUAGE
+
+
+### code style & static check
+
+```
+pre-commit run --all-files --show-diff-on-failure
 ```

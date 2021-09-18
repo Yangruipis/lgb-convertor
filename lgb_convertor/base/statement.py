@@ -65,7 +65,7 @@ class IsInStatement(Statement):
 
 class FuncStatement(Statement):
     @initializer
-    def __init__(self, name, args, dtypes, body):
+    def __init__(self, name, index, args, dtypes, body):
         pass
 
 
