@@ -44,7 +44,9 @@ def parse_one_tree(
 
             if node.get('missing_type') == 'NaN' and node['default_left']:
                 postfix_exps += [
-                    IsNullStatement(IndexStatement('arr', node['split_feature'])).with_depth(depth),
+                    IsNullStatement(
+                        IndexStatement('arr', node['split_feature']).with_depth(depth)
+                    ).with_depth(depth),
                     Op.OR,
                 ]
 

@@ -11,14 +11,17 @@ parser.add_argument('--model-json',)
 args = parser.parse_args()
 
 
-from lgb_convertor.lang.python3 import Python3
+from lgb_convertor.lang import CPP, Python3
 from lgb_convertor.lgb_convertor import parse_all
 
 
 def main():
     model_json = json.load(open(args.model_json))
     trees = parse_all(model_json['tree_info'])
-    code = Python3().convert(trees)
+    if args.lang == 'python3':
+        code = Python3().convert(trees)
+    elif args.lang == 'cpp':
+        code = CPP().convert(trees)
     print(code)
 
 

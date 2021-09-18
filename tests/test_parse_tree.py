@@ -5,6 +5,7 @@ import sys
 
 from lgb_convertor.base.registory import convertor_registry
 from lgb_convertor.base.statement import FuncStatement, LGBStatement, Statement
+from lgb_convertor.lang.cpp import CPPConvertor
 from lgb_convertor.lang.python3 import Python3Convertor
 from lgb_convertor.lgb_convertor import parse_one_tree
 
@@ -22,6 +23,8 @@ TREE_JSON = {
             'split_feature': 1,
             'threshold': '1||2||3',
             'decision_type': '==',
+            'default_left': True,
+            'missing_type': 'NaN',
             'left_child': {'leaf_index': 2, 'leaf_value': 0.4,},
             'right_child': {'leaf_index': 3, 'leaf_value': 0.5,},
         },
@@ -29,7 +32,7 @@ TREE_JSON = {
 }
 
 
-def test_parse_one_tree():
+def test_parse_one_tree_python3():
     with convertor_registry(Python3Convertor()):
         res = parse_one_tree(TREE_JSON, 0)
         print(res)
@@ -38,3 +41,9 @@ def test_parse_one_tree():
         assert eval('predict_tree_0([0.2, 1])') == 0.3
         assert eval('predict_tree_0([0.6, 1])') == 0.4
         assert eval('predict_tree_0([0.6, 4])') == 0.5
+
+
+def test_parse_one_tree_cpp():
+    with convertor_registry(CPPConvertor()):
+        res = parse_one_tree(TREE_JSON, 0)
+        print(res)
