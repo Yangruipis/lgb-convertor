@@ -4,6 +4,7 @@ import os
 import sys
 from typing import List
 
+from lgb_convertor.base.declaration import __declaration__
 from lgb_convertor.base.registory import convertor_registry
 from lgb_convertor.base.statement import (
     ConditionStatement,
@@ -38,9 +39,13 @@ class CPPConvertor:
         next_tab = CPPConvertor.INDENT * (item.depth + 1)
 
         if isinstance(item, FuncStatement):
+            declare = ''
+            if item.index == 0:
+                declare = '\n'.join(['// ' + i for i in __declaration__.splitlines()])
             return str(
+                f'{declare}\n\n'
                 f'#include <cmath>\n\n'
-                f'float {item.name}(float[] {",".join(item.args)})\n'
+                f'float {item.name}_{item.index}(float* {",".join(item.args)})\n'
                 f'{{\n'
                 f'{item.body}\n'
                 f'}}\n'

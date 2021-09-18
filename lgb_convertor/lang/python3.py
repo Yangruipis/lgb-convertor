@@ -4,8 +4,8 @@ import os
 import sys
 from typing import List
 
-from lgb_convertor.base.registory import convertor_registry
 from lgb_convertor.base.declaration import __declaration__
+from lgb_convertor.base.registory import convertor_registry
 from lgb_convertor.base.statement import (
     ConditionStatement,
     FuncStatement,

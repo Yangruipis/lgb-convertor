@@ -55,9 +55,7 @@ def parse_one_tree(
             condition = ConditionStatement(postfix_exps).with_depth(depth)
             return LGBStatement(condition, left, right).with_depth(depth)
 
-    return FuncStatement(func_name, index, ('arr',), ('float[]',), inner(root, 1)).with_depth(
-        0
-    )
+    return FuncStatement(func_name, index, ('arr',), ('float[]',), inner(root, 1)).with_depth(0)
 
 
 def parse_all(trees, array_type='double', return_type='double'):
