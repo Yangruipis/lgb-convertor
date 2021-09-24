@@ -1,6 +1,8 @@
 # LGB-convertor
 
-lgbc is a tool that convert LightGBM(aka lgb) model to an if-else statement of each language. It is useful when deploy a LightGBM model without LightGBM package.
+lgbc is a tool that convert LightGBM(aka lgb) model to an if-else statement of each language.
+
+**It is useful when deploy a lgb model without LightGBM package.**
 
 
 ## install
@@ -12,6 +14,14 @@ python setup.py install
 ```
 
 ## try example
+
+Firstly, you need to dump your lgb model to json format:
+
+```python
+model_json = lgb_model.booster_.dump_model()
+```
+
+Then, as an input of CLI tool, your need to dump your `model_json` to a local file, such as [example/test_model_tiny.json](example/test_model_tiny.json).
 
 ### Python3
 
@@ -217,7 +227,7 @@ pip install -r requirements-dev.txt
 pytest tests
 ```
 
-## extends and contribute
+## extends and contributes
 
 ### support more language
 
@@ -256,7 +266,7 @@ class CPPConvertor(BaseConvertor):
 
 ```
 
-### code style & static check
+### code style and static check
 
 ```
 pre-commit run --all-files --show-diff-on-failure
