@@ -7,8 +7,7 @@ from typing import Dict
 
 
 class IConvertor:
-    @staticmethod
-    def to_str(item):
+    def to_str(self, item):
         raise NotImplementedError
 
 
@@ -39,6 +38,10 @@ class _ConvertorRegistry:
 
     def __call__(self, convertor):
         if isinstance(convertor, str):
+            if convertor not in self._convertors:
+                raise KeyError(
+                    f'convertor: {convertor} is not registered, current convertors: {list(self._convertors.keys())}'
+                )
             convertor = self._convertors[convertor]
         assert isinstance(convertor, IConvertor)
         self.set(convertor)

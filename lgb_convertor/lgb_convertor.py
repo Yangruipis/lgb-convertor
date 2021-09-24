@@ -7,10 +7,10 @@ from enum import Enum
 from lgb_convertor.base.statement import (
     ConditionStatement,
     FuncStatement,
+    IfElseStatement,
     IndexStatement,
     IsInStatement,
     IsNullStatement,
-    LGBStatement,
     Op,
     ReturnStatement,
     ScalarStatement,
@@ -53,7 +53,7 @@ def parse_one_tree(
             left = inner(node['left_child'], depth + 1)
             right = inner(node['right_child'], depth + 1)
             condition = ConditionStatement(postfix_exps).with_depth(depth)
-            return LGBStatement(condition, left, right).with_depth(depth)
+            return IfElseStatement(condition, left, right).with_depth(depth)
 
     return FuncStatement(func_name, index, ('arr',), ('float[]',), inner(root, 1)).with_depth(0)
 

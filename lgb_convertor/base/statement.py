@@ -82,7 +82,7 @@ class ConditionStatement(Statement):
         pass
 
 
-class LGBStatement(Statement):
+class IfElseStatement(Statement):
     @initializer
     def __init__(self, condition, left, right):
         pass

@@ -4,24 +4,14 @@ import os
 import sys
 from typing import List
 
+from lgb_convertor.base.convertor import BaseConvertor
 from lgb_convertor.base.declaration import __declaration__
-from lgb_convertor.base.registory import IConvertor, register
-from lgb_convertor.base.statement import (
-    ConditionStatement,
-    FuncStatement,
-    IndexStatement,
-    IsInStatement,
-    IsNullStatement,
-    LGBStatement,
-    Op,
-    ReturnStatement,
-    ScalarStatement,
-    Statement,
-)
+from lgb_convertor.base.registory import register
+from lgb_convertor.base.statement import Op, Statement
 
 
 @register('cpp')
-class CPPConvertor(IConvertor):
+class CPPConvertor(BaseConvertor):
 
     __doc__ = """cpp code convertor (LLVM style format)
     """
@@ -32,68 +22,64 @@ class CPPConvertor(IConvertor):
         'AND': '&&',
     }
 
-    @staticmethod
-    def to_str(item):
-        assert isinstance(item, Statement)
+    def _func_to_str(self, item):
+        declare = ''
+        if item.index == 0:
+            declare = '\n'.join(['// ' + i for i in __declaration__.splitlines()])
+        return str(
+            f'{declare}\n\n'
+            f'#include <cmath>\n\n'
+            f'float {item.name}_{item.index}(float* {",".join(item.args)})\n'
+            f'{{\n'
+            f'{item.body}\n'
+            f'}}\n'
+        )
+
+    def _if_else_to_str(self, item):
         tab = CPPConvertor.INDENT * item.depth
         next_tab = CPPConvertor.INDENT * (item.depth + 1)
+        return str(
+            f'\n'
+            f'{tab}if {item.condition}\n'
+            f'{tab}{{\n'
+            f'{next_tab}{item.left}\n'
+            f'{tab}}}\n'
+            f'{tab}else\n'
+            f'{tab}{{\n'
+            f'{next_tab}{item.right}\n'
+            f'{tab}}}'
+        )
 
-        if isinstance(item, FuncStatement):
-            declare = ''
-            if item.index == 0:
-                declare = '\n'.join(['// ' + i for i in __declaration__.splitlines()])
-            return str(
-                f'{declare}\n\n'
-                f'#include <cmath>\n\n'
-                f'float {item.name}_{item.index}(float* {",".join(item.args)})\n'
-                f'{{\n'
-                f'{item.body}\n'
-                f'}}\n'
-            )
+    def _is_null_to_str(self, item):
+        return f'std::isnan({item.value})'
 
-        if isinstance(item, LGBStatement):
-            return str(
-                f'\n'
-                f'{tab}if {item.condition}\n'
-                f'{tab}{{\n'
-                f'{next_tab}{item.left}\n'
-                f'{tab}}}\n'
-                f'{tab}else\n'
-                f'{tab}{{\n'
-                f'{next_tab}{item.right}\n'
-                f'{tab}}}'
-            )
+    def _is_in_to_str(self, item):
+        condition_list = [f'{item.value} == {i}' for i in item.container]
+        return f'({" || ".join(condition_list)})'
 
-        if isinstance(item, IsNullStatement):
-            return f'std::isnan({item.value})'
+    def _return_to_str(self, item):
+        return f'return {item.value};'
 
-        if isinstance(item, IsInStatement):
-            condition_list = [f'{item.value} == {i}' for i in item.container]
-            return f'({" || ".join(condition_list)})'
+    def _scalar_to_str(self, item):
+        return f'{item.value}'
 
-        if isinstance(item, ReturnStatement):
-            return f'return {item.value};'
+    def _index_to_str(self, item):
+        return f'{item.container}[{item.idx}]'
 
-        if isinstance(item, ScalarStatement):
-            return f'{item.value}'
-
-        if isinstance(item, IndexStatement):
-            return f'{item.container}[{item.idx}]'
-
-        if isinstance(item, ConditionStatement):
-            postfix_exps = item.postfix_exps[:]
-            stack = []
-            while postfix_exps:
-                peak = postfix_exps.pop(0)
-                if isinstance(peak, Statement):
-                    stack.append(peak)
-                else:
-                    left = stack.pop()
-                    right = stack.pop()
-                    assert isinstance(peak, Op)
-                    peak_value = CPPConvertor.OP_MAP.get(peak.name, peak.value)
-                    stack.append(f'( {left} {peak_value} {right} )')
-            return str(stack[-1])
+    def _condition_to_str(self, item):
+        postfix_exps = item.postfix_exps[:]
+        stack = []
+        while postfix_exps:
+            peak = postfix_exps.pop(0)
+            if isinstance(peak, Statement):
+                stack.append(peak)
+            else:
+                left = stack.pop()
+                right = stack.pop()
+                assert isinstance(peak, Op)
+                peak_value = CPPConvertor.OP_MAP.get(peak.name, peak.value)
+                stack.append(f'( {left} {peak_value} {right} )')
+        return str(stack[-1])
 
 
 _ = CPPConvertor()

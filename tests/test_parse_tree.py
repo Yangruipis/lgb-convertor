@@ -4,7 +4,7 @@ import os
 import sys
 
 from lgb_convertor.base.registory import convertor_registry
-from lgb_convertor.base.statement import FuncStatement, LGBStatement, Statement
+from lgb_convertor.base.statement import FuncStatement, IfElseStatement, Statement
 from lgb_convertor.lang.cpp import CPPConvertor
 from lgb_convertor.lang.python3 import Python3Convertor
 from lgb_convertor.lgb_convertor import parse_one_tree
@@ -33,7 +33,7 @@ TREE_JSON = {
 
 
 def test_parse_one_tree_python3():
-    with convertor_registry(Python3Convertor()):
+    with convertor_registry('python3'):
         res = parse_one_tree(TREE_JSON, 0)
         print(res)
         exec(str(res))
@@ -44,6 +44,6 @@ def test_parse_one_tree_python3():
 
 
 def test_parse_one_tree_cpp():
-    with convertor_registry(CPPConvertor()):
+    with convertor_registry('cpp'):
         res = parse_one_tree(TREE_JSON, 0)
-        print(res)
+        print(str(res))

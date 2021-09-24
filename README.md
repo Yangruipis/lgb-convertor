@@ -126,8 +126,42 @@ pytest tests
 
 ## extends and contribute
 
-### support more LANGUAGE
+### support more language
 
+Please impl your own convertor of the language you need. Below is an example for cpp, you should overwrite those eight `_to_str` functions. More details are in [./lgb_convertor/lang/cpp.py](./lgb_convertor/lang/cpp.py).
+
+```python
+from lgb_convertor.base.convertor import BaseConvertor
+from lgb_convertor.base.registory import register
+
+
+@register('cpp')
+class CPPConvertor(BaseConvertor):
+    def _func_to_str(self, item: FuncStatement):
+        pass
+
+    def _if_else_to_str(self, item: IfElseStatement):
+        pass
+
+    def _is_null_to_str(self, item: IsNullStatement):
+        pass
+
+    def _is_in_to_str(self, item: IsInStatement):
+        pass
+
+    def _return_to_str(self, item: ReturnStatement):
+        pass
+
+    def _scalar_to_str(self, item: ScalarStatement):
+        pass
+
+    def _index_to_str(self, item: IndexStatement):
+        pass
+
+    def _condition_to_str(self, item: ConditionStatement):
+        pass
+
+```
 
 ### code style & static check
 
