@@ -36,8 +36,8 @@ class CPPConvertor(BaseConvertor):
         )
 
     def _if_else_to_str(self, item):
-        tab = CPPConvertor.INDENT * item.depth
-        next_tab = CPPConvertor.INDENT * (item.depth + 1)
+        tab = self.INDENT * item.depth
+        next_tab = self.INDENT * (item.depth + 1)
         return str(
             f'\n'
             f'{tab}if {item.condition}\n'
@@ -77,7 +77,7 @@ class CPPConvertor(BaseConvertor):
                 left = stack.pop()
                 right = stack.pop()
                 assert isinstance(peak, Op)
-                peak_value = CPPConvertor.OP_MAP.get(peak.name, peak.value)
+                peak_value = self.OP_MAP.get(peak.name, peak.value)
                 stack.append(f'( {left} {peak_value} {right} )')
         return str(stack[-1])
 

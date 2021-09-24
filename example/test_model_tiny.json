@@ -1,0 +1,39 @@
+{
+    "tree_info": [
+	{
+	    "tree_structure": {
+		"split_feature": 0,
+		"threshold": 0.1,
+		"decision_type": "<=",
+		"left_child": {
+		    "leaf_index": 0,
+		    "leaf_value": 0.1
+		},
+		"right_child": {
+		    "split_feature": 0,
+		    "threshold": 0.5,
+		    "decision_type": "<=",
+		    "left_child": {
+			"leaf_index": 1,
+			"leaf_value": 0.3
+		    },
+		    "right_child": {
+			"split_feature": 1,
+			"threshold": "1||2||3",
+			"decision_type": "==",
+			"default_left": true,
+			"missing_type": "NaN",
+			"left_child": {
+			    "leaf_index": 2,
+			    "leaf_value": 0.4
+			},
+			"right_child": {
+			    "leaf_index": 3,
+			    "leaf_value": 0.5
+			}
+		    }
+		}
+	    }
+	}
+    ]
+}
