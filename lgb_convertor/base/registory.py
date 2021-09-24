@@ -2,12 +2,27 @@
 
 import os
 import sys
+from functools import wraps
+from typing import Dict
+
+
+class IConvertor:
+    @staticmethod
+    def to_str(item):
+        raise NotImplementedError
 
 
 class _ConvertorRegistry:
 
     convertor = None
     _lock = False
+
+    _convertors: Dict[str, IConvertor] = {}
+
+    def register(self, name, cls):
+        self.acquire()
+        self._convertors[name] = cls
+        self.release()
 
     def set(self, convertor):
         self.acquire()
@@ -23,6 +38,9 @@ class _ConvertorRegistry:
         _ConvertorRegistry.convertor = None
 
     def __call__(self, convertor):
+        if isinstance(convertor, str):
+            convertor = self._convertors[convertor]
+        assert isinstance(convertor, IConvertor)
         self.set(convertor)
         return self
 
@@ -34,3 +52,16 @@ class _ConvertorRegistry:
 
 
 convertor_registry = _ConvertorRegistry()
+
+
+def register(name):
+    def _register(cls):
+        @wraps(cls)
+        def wrapper(*args, **kwargs):
+            instance = cls(*args, **kwargs)
+            convertor_registry.register(name, instance)
+            return instance
+
+        return wrapper
+
+    return _register

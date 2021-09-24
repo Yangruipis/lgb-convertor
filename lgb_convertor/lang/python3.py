@@ -5,7 +5,7 @@ import sys
 from typing import List
 
 from lgb_convertor.base.declaration import __declaration__
-from lgb_convertor.base.registory import convertor_registry
+from lgb_convertor.base.registory import IConvertor, register
 from lgb_convertor.base.statement import (
     ConditionStatement,
     FuncStatement,
@@ -18,10 +18,10 @@ from lgb_convertor.base.statement import (
     ScalarStatement,
     Statement,
 )
-from lgb_convertor.lang.lang import Lang
 
 
-class Python3Convertor:
+@register('python3')
+class Python3Convertor(IConvertor):
 
     INDENT = '    '
 
@@ -77,12 +77,4 @@ class Python3Convertor:
             return str(stack[-1])
 
 
-class Python3(Lang):
-    @property
-    def convertor(self):
-        return Python3Convertor()
-
-    def convert(self, trees: List[FuncStatement]):
-
-        with convertor_registry(self.convertor):
-            return trees[0].__str__()
+_ = Python3Convertor()
