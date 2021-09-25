@@ -16,8 +16,9 @@ from sklearn.preprocessing import KBinsDiscretizer
 
 N_FEATURES = 11
 
+
 def random_nan(X):
-    X[np.random.rand(*X.shape)>0.9] = np.nan
+    X[np.random.rand(*X.shape) > 0.9] = np.nan
     return X
 
 
@@ -33,7 +34,9 @@ def train():
     X_train = random_nan(X_train)
     X_test = random_nan(X_test)
 
-    model = LGBMClassifier(verbose=1, silent=False, n_estimators=10, max_depth=8, colsample_bytree=0.8)
+    model = LGBMClassifier(
+        verbose=1, silent=False, n_estimators=10, max_depth=8, colsample_bytree=0.8
+    )
     model.fit(X_train, y_train, categorical_feature=list(range(10)))
 
     pred_test = model.predict_proba(X_test)[:, 1]
@@ -41,7 +44,7 @@ def train():
 
     def preprocess(data):
         data[:, :10] = kbins.fit_transform(data[:, :10])
-        data = random_nan(data)        
+        data = random_nan(data)
         return data
 
     return preprocess, model
