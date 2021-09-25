@@ -5,6 +5,15 @@ lgbc is a tool that convert LightGBM(aka lgb) model to an if-else statement of e
 
 **It is useful when deploy a lgb model without LightGBM package.**
 
+## language supported
+
+| date       | lang    | test |
+|:----------:|:-------:|:----:|
+| 2021-09-21 | python3 |      |
+| 2021-09-24 | cpp     |      |
+| 2021-09-25 | go      |      |
+
+
 
 ## install
 

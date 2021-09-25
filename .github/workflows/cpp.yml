@@ -1,4 +1,4 @@
-name: Pre-commit
+name: CPP
 
 on: [push]
 
@@ -18,7 +18,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements-dev.txt
         sudo apt-get install build-essential
-    - name: Analysing the code with pylint
+    - name: run test
       run: |
         python setup.py install
         python tests/alignment/runner.py --lang cpp
