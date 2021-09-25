@@ -1,0 +1,15 @@
+# find . -type f -name '*.c' -o -name '*.cpp' -o -name '*.h'| egrep -v "third_party|char|model|proto" | xargs clang-format -style=file -i
+---
+BasedOnStyle: LLVM
+IndentWidth: 4
+BreakBeforeBraces: Allman
+UseTab: Never
+ColumnLimit: 100
+Standard: Cpp03
+BinPackArguments: false
+BinPackParameters: false
+AccessModifierOffset: -4
+AlwaysBreakTemplateDeclarations: true
+AllowAllParametersOfDeclarationOnNextLine: true
+AlwaysBreakAfterDefinitionReturnType: None
+# FixNamespaceComments: true

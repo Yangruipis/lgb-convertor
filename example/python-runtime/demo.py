@@ -2,6 +2,7 @@
 
 import os
 import pickle
+import json
 import sys
 
 import numpy as np
@@ -58,7 +59,6 @@ def main():
 
     preprocess, model = train()
     model_json = model.booster_.dump_model()
-    # import json
     # with open('../test_model.json', 'w') as f:
     #     json.dump(model_json, f, indent=4, sort_keys=True)
 
@@ -73,13 +73,12 @@ def main():
 
     # exec this code
     for tree in trees:
-        exec(tree)
+        exec(tree, globals())
 
     # call the predict function of each tree
     result = [0] * X.shape[0]
     for i in range(len(result)):
-        for j in range(len(trees)):
-            result[i] += eval(f'predict_tree_{j}(X[{i}])')
+        result[i] = eval(f'predict_tree_all(X[{i}])')
         result[i] = sigmoid(result[i])
 
     print(answer[:5])

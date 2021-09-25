@@ -54,7 +54,7 @@ class CPPConvertor(BaseConvertor):
         return f'std::isnan({item.value})'
 
     def _is_in_to_str(self, item):
-        condition_list = [f'{item.value} == {i}' for i in item.container]
+        condition_list = [f'std::abs({item.value} - {i}) <= 1e-6' for i in item.container]
         return f'({" || ".join(condition_list)})'
 
     def _return_to_str(self, item):
