@@ -13,4 +13,5 @@ from lgb_convertor.lgb_convertor import parse_all
 def e2e_convert(model_json: dict, lang: str):
     trees = parse_all(model_json['tree_info'])
     with convertor_registry(lang):
-        return [tree.__str__() for tree in trees]
+        for tree in trees:
+            yield tree.__str__()

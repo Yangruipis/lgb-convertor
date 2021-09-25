@@ -17,9 +17,7 @@ from lgb_convertor.base.statement import (
 )
 
 
-def parse_one_tree(
-    root, index, array_type='double', return_type='double', func_name='predict_tree'
-):
+def parse_one_tree(root, index, func_name='predict_tree', input_name='arr'):
     def inner(node, depth):
         if 'leaf_index' in node:
             return ReturnStatement(
@@ -32,20 +30,20 @@ def parse_one_tree(
                 postfix_exps = [
                     IsInStatement(
                         node['threshold'].split('||'),
-                        IndexStatement('arr', node['split_feature']).with_depth(depth),
+                        IndexStatement(input_name, node['split_feature']).with_depth(depth),
                     ).with_depth(depth)
                 ]
             else:
                 postfix_exps = [
                     ScalarStatement(node['threshold']).with_depth(depth),
-                    IndexStatement('arr', node['split_feature']).with_depth(depth),
+                    IndexStatement(input_name, node['split_feature']).with_depth(depth),
                     Op(node['decision_type']),
                 ]
 
             if node.get('missing_type') == 'NaN' and node['default_left']:
                 postfix_exps += [
                     IsNullStatement(
-                        IndexStatement('arr', node['split_feature']).with_depth(depth)
+                        IndexStatement(input_name, node['split_feature']).with_depth(depth)
                     ).with_depth(depth),
                     Op.OR,
                 ]
@@ -55,11 +53,18 @@ def parse_one_tree(
             condition = ConditionStatement(postfix_exps).with_depth(depth)
             return IfElseStatement(condition, left, right).with_depth(depth)
 
-    return FuncStatement(func_name, index, ('arr',), ('float[]',), inner(root, 1)).with_depth(0)
+    return FuncStatement(func_name, index, (input_name,), None, inner(root, 1)).with_depth(0)
 
 
-def parse_all(trees, array_type='double', return_type='double'):
+def parse_sum_tree(tree_num, func_name='predict_tree', input_name='arr'):
+    funcs = [f'{func_name}_{i}({input_name})' for i in range(tree_num)]
+    funcs_sum = ' + '.join(funcs)
+    return FuncStatement(
+        func_name, 'all', (input_name,), None, ReturnStatement(funcs_sum).with_depth(1)
+    ).with_depth(0)
+
+
+def parse_all(trees, func_name='predict_tree', input_name='arr'):
     return [
-        parse_one_tree(tree['tree_structure'], idx, array_type, return_type)
-        for idx, tree in enumerate(trees)
-    ]
+        parse_one_tree(tree['tree_structure'], idx, func_name) for idx, tree in enumerate(trees)
+    ] + [parse_sum_tree(len(trees), func_name, input_name)]

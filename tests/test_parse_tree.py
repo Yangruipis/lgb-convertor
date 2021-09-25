@@ -3,6 +3,7 @@
 import os
 import sys
 
+import numpy as np
 from lgb_convertor.base.registory import convertor_registry
 from lgb_convertor.base.statement import FuncStatement, IfElseStatement, Statement
 from lgb_convertor.lang.cpp import CPPConvertor

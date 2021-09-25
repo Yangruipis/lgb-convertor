@@ -31,10 +31,11 @@ class Python3Convertor(BaseConvertor):
         declare = ''
         if item.index == 0:
             declare = '\n'.join(['# ' + i for i in __declaration__.splitlines()])
+            declare += '\nimport numpy as np\n\n'
         return str(
             f'{declare}\n\n'
             f'def {item.name}_{item.index}({",".join(item.args)}):\n'
-            f'{next_tab}import numpy as np\n\n'
+            # f'{next_tab}import numpy as np\n\n'
             f'{next_tab}{item.body}\n'
         )
 
