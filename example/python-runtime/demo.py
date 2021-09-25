@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
+import json
 import os
 import pickle
-import json
 import sys
 
 import numpy as np

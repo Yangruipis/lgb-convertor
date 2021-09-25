@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 
+import argparse
 import json
 import os
-import sys
 import subprocess
-
-import argparse
+import sys
 
 from lgb_convertor import e2e_convert
 
@@ -15,10 +14,11 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--lang', default='cpp')
 args = parser.parse_args()
 
-TPL = "#CODE_TPL#"
+TPL = '#CODE_TPL#'
+
 
 def run_cpp(model_json):
-    res = ""
+    res = ''
     for tree in e2e_convert(model_json, args.lang):
         res += tree
 
@@ -29,21 +29,20 @@ def run_cpp(model_json):
     with open(cpp_file_path, 'w') as f:
         f.write(cpp)
 
-    cmd = f"g++ {cpp_file_path} -o tmp.bin && ./tmp.bin && rm ./tmp.bin"
+    cmd = f'g++ {cpp_file_path} -o tmp.bin && ./tmp.bin && rm ./tmp.bin'
     res = subprocess.run(cmd, shell=True)
     if res.returncode != 0:
         print(f'cmd failed: {cmd}')
         raise RuntimeError(res)
     else:
         print(f'cmd({cmd}) successed!')
-    
+
 
 def main():
-    model_json = json.load(
-        open(os.path.join(_CURRENT_DIR, "../../example/test_model.json")))
+    model_json = json.load(open(os.path.join(_CURRENT_DIR, '../../example/test_model.json')))
     if args.lang == 'cpp':
         run_cpp(model_json)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
