@@ -26,9 +26,9 @@ class CPPConvertor(BaseConvertor):
         declare = ''
         if item.index == 0:
             declare = '\n'.join(['// ' + i for i in __declaration__.splitlines()])
+            declare += '\n\n#include <cmath>'
         return str(
             f'{declare}\n\n'
-            f'#include <cmath>\n\n'
             f'float {item.name}_{item.index}(float* {",".join(item.args)})\n'
             f'{{\n'
             f'{item.body}\n'

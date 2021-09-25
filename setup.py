@@ -26,7 +26,7 @@ setup(
     url='https://yangruipis.github.io/lgb-convertor/',
     long_description=read('README.md'),
     long_description_content_type='text/markdown',
-    packages=setuptools.find_packages(include=['cli/*']),
+    packages=setuptools.find_packages(),
     # packages=[
     #     'lgb_convertor', 'lgb_convertor.cli', 'lgb_convertor.base',
     #     'lgb_convertor.lang'
