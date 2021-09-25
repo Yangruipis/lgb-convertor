@@ -17,6 +17,30 @@ args = parser.parse_args()
 TPL = '#CODE_TPL#'
 
 
+def run_python3(model_json):
+    import numpy as np
+
+    def sigmoid(x):
+        return 1 / (1 + np.exp(-x))
+
+    res = ''
+    for tree in e2e_convert(model_json, args.lang):
+        res += tree
+
+    X = np.loadtxt(os.path.join(_CURRENT_DIR, '../data/feature.csv'), delimiter=',')
+    answer = np.loadtxt(os.path.join(_CURRENT_DIR, '../data/lgb_predict.csv'), delimiter=',')
+    exec(res, globals())
+
+    result = [0] * X.shape[0]
+    for i in range(len(result)):
+        result[i] = eval(f'predict_tree_all(X[{i}])')
+        result[i] = sigmoid(result[i])
+
+    for i, v in enumerate(answer):
+        print('{:.4f} vs {:.4f}'.format(v, answer[i]))
+    np.testing.assert_array_almost_equal(answer, result)
+
+
 def run_cpp(model_json):
     res = ''
     for tree in e2e_convert(model_json, args.lang):
@@ -42,6 +66,8 @@ def main():
     model_json = json.load(open(os.path.join(_CURRENT_DIR, '../../example/test_model.json')))
     if args.lang == 'cpp':
         run_cpp(model_json)
+    elif args.lang == 'python3':
+        run_python3(model_json)
 
 
 if __name__ == '__main__':
