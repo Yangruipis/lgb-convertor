@@ -21,3 +21,5 @@ jobs:
     - name: Analysing the code with pylint
       run: |
         pre-commit run --all-files --show-diff-on-failure
+        python setup.py install
+        pytest -s tests
