@@ -1,7 +1,5 @@
 # LGB-convertor
-
-[![Pre-commit](https://github.com/Yangruipis/lgb-convertor/actions/workflows/pylint.yml/badge.svg?branch=master)](https://github.com/Yangruipis/lgb-convertor/actions/workflows/pylint.yml)
-
+[![Pre-commit](https://github.com/Yangruipis/lgb-convertor/actions/workflows/pylint.yml/badge.svg)](https://github.com/Yangruipis/lgb-convertor/actions/workflows/pylint.yml)
 
 lgbc is a tool that convert LightGBM(aka lgb) model to an if-else statement of each language.
 
