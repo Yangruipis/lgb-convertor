@@ -37,7 +37,7 @@ class JavaConvertor(BaseConvertor):
 
     def _func_to_str(self, item):
         return str(
-            f'private double {item.name}_{item.index}(double[] {",".join(item.args)}) {{\n'
+            f'public double {item.name}_{item.index}(double[] {",".join(item.args)}) {{\n'
             f'{item.body}\n'
             f'}}\n'
         )

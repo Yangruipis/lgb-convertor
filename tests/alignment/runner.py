@@ -39,6 +39,20 @@ def run_python3(model_json):
     np.testing.assert_array_almost_equal(answer, result)
 
 
+def _run_cmd(cmd):
+    res = subprocess.run(cmd, shell=True)
+    if res.returncode != 0:
+        print(f'cmd failed: {cmd}')
+        raise RuntimeError(res)
+    else:
+        print(f'cmd({cmd}) successed!')
+
+
+def _remove(filename):
+    if os.path.exists(filename):
+        os.remove(filename)
+
+
 def run_go(model_json):
     res = e2e_convert(model_json, args.lang)
 
@@ -50,31 +64,54 @@ def run_go(model_json):
         f.write(code)
 
     cmd = f'go run {file_path}'
-    res = subprocess.run(cmd, shell=True)
-    if res.returncode != 0:
-        print(f'cmd failed: {cmd}')
-        raise RuntimeError(res)
-    else:
-        print(f'cmd({cmd}) successed!')
+
+    try:
+        _run_cmd(cmd)
+    except e:
+        raise e
+    finally:
+        _remove(file_path)
 
 
 def run_cpp(model_json):
     res = e2e_convert(model_json, args.lang)
 
-    cpp = open(os.path.join(_CURRENT_DIR, 'alignment.cpp.tpl')).read()
-    cpp = cpp.replace(TPL, res)
+    code = open(os.path.join(_CURRENT_DIR, 'alignment.cpp.tpl')).read()
+    code = code.replace(TPL, res)
 
-    cpp_file_path = os.path.join(_CURRENT_DIR, 'alignment.cpp')
-    with open(cpp_file_path, 'w') as f:
-        f.write(cpp)
+    file_path = os.path.join(_CURRENT_DIR, 'alignment.cpp')
+    with open(file_path, 'w') as f:
+        f.write(code)
 
-    cmd = f'g++ {cpp_file_path} -o tmp.bin && ./tmp.bin && rm ./tmp.bin'
-    res = subprocess.run(cmd, shell=True)
-    if res.returncode != 0:
-        print(f'cmd failed: {cmd}')
-        raise RuntimeError(res)
-    else:
-        print(f'cmd({cmd}) successed!')
+    cmd = f'g++ {file_path} -o tmp.bin && ./tmp.bin && rm ./tmp.bin'
+    try:
+        _run_cmd(cmd)
+    except e:
+        raise e
+    finally:
+        _remove(file_path)
+        _remove('tmp.bin')
+
+
+def run_java(model_json):
+    res = e2e_convert(model_json, args.lang)
+
+    file_path = os.path.join(_CURRENT_DIR, '__LGBC_LGBModel.java')
+    with open(file_path, 'w') as f:
+        f.write(res)
+
+    main_path = os.path.join(_CURRENT_DIR, 'Alignment.java')
+    lgb_path = os.path.join(_CURRENT_DIR, '__LGBC_LGBModel.java')
+
+    cmd = f'javac {main_path} {lgb_path} -d ./ && java Alignment'
+    try:
+        _run_cmd(cmd)
+    except e:
+        raise e
+    finally:
+        _remove(lgb_path)
+        _remove('./__LGBC_LGBModel.class')
+        _remove('./Alignment.class')
 
 
 def main():
@@ -85,6 +122,10 @@ def main():
         run_python3(model_json)
     elif args.lang == 'go':
         run_go(model_json)
+    elif args.lang == 'java':
+        run_java(model_json)
+    else:
+        raise ValueError(f'unsupported lang: {args.lang}')
 
 
 if __name__ == '__main__':
