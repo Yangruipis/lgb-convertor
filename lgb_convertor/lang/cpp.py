@@ -22,13 +22,14 @@ class CPPConvertor(BaseConvertor):
         'AND': '&&',
     }
 
+    def _lgb_to_str(self, item):
+        declare = '\n'.join(['// ' + i for i in __declaration__.splitlines()])
+        declare += '\n\n#include <cmath>'
+        trees = '\n'.join([str(tree) for tree in item.trees])
+        return f'{declare}\n\n{trees}'
+
     def _func_to_str(self, item):
-        declare = ''
-        if item.index == 0:
-            declare = '\n'.join(['// ' + i for i in __declaration__.splitlines()])
-            declare += '\n\n#include <cmath>'
         return str(
-            f'{declare}\n\n'
             f'float {item.name}_{item.index}(float* {",".join(item.args)})\n'
             f'{{\n'
             f'{item.body}\n'

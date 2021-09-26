@@ -23,9 +23,7 @@ def run_python3(model_json):
     def sigmoid(x):
         return 1 / (1 + np.exp(-x))
 
-    res = ''
-    for tree in e2e_convert(model_json, args.lang):
-        res += tree
+    res = e2e_convert(model_json, args.lang)
 
     X = np.loadtxt(os.path.join(_CURRENT_DIR, '../data/feature.csv'), delimiter=',')
     answer = np.loadtxt(os.path.join(_CURRENT_DIR, '../data/lgb_predict.csv'), delimiter=',')
@@ -42,9 +40,7 @@ def run_python3(model_json):
 
 
 def run_go(model_json):
-    res = ''
-    for tree in e2e_convert(model_json, args.lang):
-        res += tree
+    res = e2e_convert(model_json, args.lang)
 
     code = open(os.path.join(_CURRENT_DIR, 'alignment.go.tpl')).read()
     code = code.replace(TPL, res)
@@ -63,9 +59,7 @@ def run_go(model_json):
 
 
 def run_cpp(model_json):
-    res = ''
-    for tree in e2e_convert(model_json, args.lang):
-        res += tree
+    res = e2e_convert(model_json, args.lang)
 
     cpp = open(os.path.join(_CURRENT_DIR, 'alignment.cpp.tpl')).read()
     cpp = cpp.replace(TPL, res)

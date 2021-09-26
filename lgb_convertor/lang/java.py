@@ -10,13 +10,13 @@ from lgb_convertor.base.registory import register
 from lgb_convertor.base.statement import Op, Statement
 
 
-@register('go')
-class GoConvertor(BaseConvertor):
+@register('java')
+class JavaConvertor(BaseConvertor):
 
-    __doc__ = """golang code convertor
+    __doc__ = """java code convertor (LLVM style format)
     """
 
-    INDENT = '\t'
+    INDENT = '    '
     OP_MAP = {
         'OR': '||',
         'AND': '&&',
@@ -24,12 +24,20 @@ class GoConvertor(BaseConvertor):
 
     def _lgb_to_str(self, item):
         declare = '\n'.join(['// ' + i for i in __declaration__.splitlines()])
+
         trees = '\n'.join([str(tree) for tree in item.trees])
-        return f'{declare}\n\n{trees}'
+        trees = trees.replace('\n', f'\n{self.INDENT}')
+        return str(
+            f'{declare}\n'
+            f'public class LGBConvertor {{\n'
+            f'{self.INDENT}public static final double NaN = 0.0d / 0.0;\n'
+            f'{self.INDENT}{trees}\n'
+            f'}}\n'
+        )
 
     def _func_to_str(self, item):
         return str(
-            f'func {item.name}_{item.index}({item.args[0]} []float64) float64 {{\n'
+            f'private double {item.name}_{item.index}(double[] {",".join(item.args)}) {{\n'
             f'{item.body}\n'
             f'}}\n'
         )
@@ -47,14 +55,14 @@ class GoConvertor(BaseConvertor):
         )
 
     def _is_null_to_str(self, item):
-        return f'math.IsNaN({item.value})'
+        return f'Double.isNaN({item.value})'
 
     def _is_in_to_str(self, item):
-        condition_list = [f'math.Abs({item.value} - {i}) < 1e-6' for i in item.container]
+        condition_list = [f'Math.abs({item.value} - {i}) <= 1e-6' for i in item.container]
         return f'({" || ".join(condition_list)})'
 
     def _return_to_str(self, item):
-        return f'return {item.value}'
+        return f'return {item.value};'
 
     def _scalar_to_str(self, item):
         return f'{item.value}'
@@ -74,8 +82,8 @@ class GoConvertor(BaseConvertor):
                 right = stack.pop()
                 assert isinstance(peak, Op)
                 peak_value = self.OP_MAP.get(peak.name, peak.value)
-                stack.append(f'{left} {peak_value} {right}')
+                stack.append(f'( {left} {peak_value} {right} )')
         return str(stack[-1])
 
 
-_ = GoConvertor()
+_ = JavaConvertor()

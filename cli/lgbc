@@ -17,8 +17,7 @@ from lgb_convertor import e2e_convert
 
 def main():
     model_json = json.load(open(args.model_json))
-    for tree in e2e_convert(model_json, args.lang):
-        print(tree)
+    print(e2e_convert(model_json, args.lang))
 
 
 if __name__ == '__main__':

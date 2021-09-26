@@ -26,14 +26,15 @@ class Python3Convertor(BaseConvertor):
 
     INDENT = '    '
 
+    def _lgb_to_str(self, item):
+        declare = '\n'.join(['# ' + i for i in __declaration__.splitlines()])
+        declare += '\nimport numpy as np\n\n'
+        trees = '\n'.join([str(tree) for tree in item.trees])
+        return f'{declare}\n\n{trees}'
+
     def _func_to_str(self, item):
         next_tab = self.INDENT * (item.depth + 1)
-        declare = ''
-        if item.index == 0:
-            declare = '\n'.join(['# ' + i for i in __declaration__.splitlines()])
-            declare += '\nimport numpy as np\n\n'
         return str(
-            f'{declare}\n\n'
             f'def {item.name}_{item.index}({",".join(item.args)}):\n'
             # f'{next_tab}import numpy as np\n\n'
             f'{next_tab}{item.body}\n'

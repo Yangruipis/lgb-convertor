@@ -72,8 +72,7 @@ def main():
     trees = e2e_convert(model_json, 'python3')
 
     # exec this code
-    for tree in trees:
-        exec(tree, globals())
+    exec(trees, globals())
 
     # call the predict function of each tree
     result = [0] * X.shape[0]

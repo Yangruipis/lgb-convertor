@@ -8,6 +8,7 @@ from lgb_convertor.base.statement import (
     IndexStatement,
     IsInStatement,
     IsNullStatement,
+    LGBStatement,
     Op,
     ReturnStatement,
     ScalarStatement,
@@ -16,6 +17,9 @@ from lgb_convertor.base.statement import (
 
 
 class BaseConvertor(IConvertor):
+    def _lgb_to_str(self, item: LGBStatement):
+        raise NotImplementedError
+
     def _func_to_str(self, item: FuncStatement):
         raise NotImplementedError
 
@@ -42,6 +46,7 @@ class BaseConvertor(IConvertor):
 
     def to_str(self, item: Statement):
         func_map = {
+            LGBStatement: self._lgb_to_str,
             FuncStatement: self._func_to_str,
             IfElseStatement: self._if_else_to_str,
             IsNullStatement: self._is_null_to_str,

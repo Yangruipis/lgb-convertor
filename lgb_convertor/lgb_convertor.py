@@ -11,6 +11,7 @@ from lgb_convertor.base.statement import (
     IndexStatement,
     IsInStatement,
     IsNullStatement,
+    LGBStatement,
     Op,
     ReturnStatement,
     ScalarStatement,
@@ -65,6 +66,7 @@ def parse_sum_tree(tree_num, func_name='predict_tree', input_name='arr'):
 
 
 def parse_all(trees, func_name='predict_tree', input_name='arr'):
-    return [
-        parse_one_tree(tree['tree_structure'], idx, func_name) for idx, tree in enumerate(trees)
-    ] + [parse_sum_tree(len(trees), func_name, input_name)]
+    return LGBStatement(
+        [parse_one_tree(tree['tree_structure'], idx, func_name) for idx, tree in enumerate(trees)]
+        + [parse_sum_tree(len(trees), func_name, input_name)]
+    )

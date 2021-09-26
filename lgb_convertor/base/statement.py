@@ -86,3 +86,9 @@ class IfElseStatement(Statement):
     @initializer
     def __init__(self, condition, left, right):
         pass
+
+
+class LGBStatement(Statement):
+    @initializer
+    def __init__(self, trees):
+        pass
