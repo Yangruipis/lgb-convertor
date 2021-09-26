@@ -38,7 +38,7 @@ int main()
             }
             printf("%d %6.6lf\n", count, arr[count]);
         }
-        auto res = sigmoid(predict_tree_all(arr));
+        auto res = sigmoid(__LGBC_predict_tree_all(arr));
         auto answer = std::stof(pred);
         printf("%6.4lf vs %6.4lf\n", res, answer);
         if (std::abs(res - answer) > 1e-6)

@@ -10,7 +10,7 @@ from lgb_convertor.lang import *
 from lgb_convertor.lgb_convertor import parse_all
 
 
-def e2e_convert(model_json: dict, lang: str):
-    lgb = parse_all(model_json['tree_info'])
+def e2e_convert(model_json: dict, lang: str, func_name='__LGBC_predict_tree'):
+    lgb = parse_all(model_json['tree_info'], func_name=func_name)
     with convertor_registry(lang):
         return lgb.__str__()

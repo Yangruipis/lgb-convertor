@@ -29,7 +29,7 @@ class JavaConvertor(BaseConvertor):
         trees = trees.replace('\n', f'\n{self.INDENT}')
         return str(
             f'{declare}\n'
-            f'public class LGBConvertor {{\n'
+            f'public class __LGBC_LGBModel {{\n'
             f'{self.INDENT}public static final double NaN = 0.0d / 0.0;\n'
             f'{self.INDENT}{trees}\n'
             f'}}\n'

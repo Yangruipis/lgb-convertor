@@ -57,7 +57,7 @@ func main() {
 				input[i] = value
 			}
 		}
-		res := sigmoid(predict_tree_all(input))
+		res := sigmoid(__LGBC_predict_tree_all(input))
 		fmt.Printf("%f, %f\n", res, answer)
 		if math.Abs(res-answer) > 1e-6 {
 			fmt.Printf("error, %v\n", err)

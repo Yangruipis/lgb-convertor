@@ -77,7 +77,7 @@ def main():
     # call the predict function of each tree
     result = [0] * X.shape[0]
     for i in range(len(result)):
-        result[i] = eval(f'predict_tree_all(X[{i}])')
+        result[i] = eval(f'__LGBC_predict_tree_all(X[{i}])')
         result[i] = sigmoid(result[i])
 
     print(answer[:5])

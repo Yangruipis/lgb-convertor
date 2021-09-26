@@ -31,7 +31,7 @@ def run_python3(model_json):
 
     result = [0] * X.shape[0]
     for i in range(len(result)):
-        result[i] = eval(f'predict_tree_all(X[{i}])')
+        result[i] = eval(f'__LGBC_predict_tree_all(X[{i}])')
         result[i] = sigmoid(result[i])
 
     for i, v in enumerate(answer):
