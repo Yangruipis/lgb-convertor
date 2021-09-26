@@ -41,6 +41,27 @@ def run_python3(model_json):
     np.testing.assert_array_almost_equal(answer, result)
 
 
+def run_go(model_json):
+    res = ''
+    for tree in e2e_convert(model_json, args.lang):
+        res += tree
+
+    code = open(os.path.join(_CURRENT_DIR, 'alignment.go.tpl')).read()
+    code = code.replace(TPL, res)
+
+    file_path = os.path.join(_CURRENT_DIR, 'alignment.go')
+    with open(file_path, 'w') as f:
+        f.write(code)
+
+    cmd = f'go run {file_path}'
+    res = subprocess.run(cmd, shell=True)
+    if res.returncode != 0:
+        print(f'cmd failed: {cmd}')
+        raise RuntimeError(res)
+    else:
+        print(f'cmd({cmd}) successed!')
+
+
 def run_cpp(model_json):
     res = ''
     for tree in e2e_convert(model_json, args.lang):
@@ -68,6 +89,8 @@ def main():
         run_cpp(model_json)
     elif args.lang == 'python3':
         run_python3(model_json)
+    elif args.lang == 'go':
+        run_go(model_json)
 
 
 if __name__ == '__main__':

@@ -26,7 +26,6 @@ class GoConvertor(BaseConvertor):
         declare = ''
         if item.index == 0:
             declare = '\n'.join(['// ' + i for i in __declaration__.splitlines()])
-            declare += '\npackage main\n\nimport "math"'
         return str(
             f'{declare}\n\n'
             f'func {item.name}_{item.index}({item.args[0]} []float64) float64 {{\n'
@@ -50,7 +49,7 @@ class GoConvertor(BaseConvertor):
         return f'math.IsNaN({item.value})'
 
     def _is_in_to_str(self, item):
-        condition_list = [f'{item.value} == {i}' for i in item.container]
+        condition_list = [f'math.Abs({item.value} - {i}) < 1e-6' for i in item.container]
         return f'({" || ".join(condition_list)})'
 
     def _return_to_str(self, item):
