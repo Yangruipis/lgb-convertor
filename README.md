@@ -1,5 +1,5 @@
 # LGB-convertor
-[![Pre-commit](https://github.com/Yangruipis/lgb-convertor/actions/workflows/pylint.yml/badge.svg)](https://github.com/Yangruipis/lgb-convertor/actions/workflows/pylint.yml)
+[![Pre-commit](https://github.com/Yangruipis/lgb-convertor/actions/workflows/pylint.yml/badge.svg?branch=master)](https://github.com/Yangruipis/lgb-convertor/actions/workflows/pylint.yml)
 
 lgbc is a tool that convert LightGBM(aka lgb) model to an if-else statement of each language.
 
@@ -12,7 +12,7 @@ lgbc is a tool that convert LightGBM(aka lgb) model to an if-else statement of e
 | 2021-09-21 | python3 |  [![PYTHON3](https://github.com/Yangruipis/lgb-convertor/actions/workflows/python3.yml/badge.svg?branch=master)](https://github.com/Yangruipis/lgb-convertor/actions/workflows/python3.yml)    |
 | 2021-09-24 | cpp     |  [![CPP](https://github.com/Yangruipis/lgb-convertor/actions/workflows/cpp.yml/badge.svg)](https://github.com/Yangruipis/lgb-convertor/actions/workflows/cpp.yml)    |
 | 2021-09-25 | go      |  [![GO](https://github.com/Yangruipis/lgb-convertor/actions/workflows/go.yml/badge.svg?branch=master)](https://github.com/Yangruipis/lgb-convertor/actions/workflows/go.yml)    |
-| 2021-09-26 | java    |      |
+| 2021-09-26 | java    |  [![JAVA](https://github.com/Yangruipis/lgb-convertor/actions/workflows/java.yml/badge.svg?branch=master)](https://github.com/Yangruipis/lgb-convertor/actions/workflows/java.yml)    |
 
 
 ## install
