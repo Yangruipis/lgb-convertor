@@ -4,7 +4,7 @@
 lgbc is a tool that converts [LightGBM](https://github.com/microsoft/LightGBM)(aka lgb) model to if-else statements of each language.
 
 **It is useful when deploying a LGB model with no LightGBM packages or any other 3rd party dependency required.** For example, as a spark UDF runs on cluster worker nodes, or on mobile perhaps.
- 
+
 ## language supported
 
 | date       | lang    | test |
@@ -67,6 +67,28 @@ with open('/YOUR/MODEL_JSON/PATH', 'w') as f:
 
 Then, you call use the lgbc command line as follow:
 
+```
+usage: lgbc [-h] [--lang LANG] --model-json MODEL_JSON [-v]
+
+Description:
+============
+lgbc is a tool that convert LightGBM(aka lgb) model to
+    if-else statements of each language.
+
+Examples:
+=========
+- lgbc --model-json example/test_model_tiny.json --lang python3
+- lgbc -m example/test_model_tiny.json -l cpp
+
+See more at [https://github.com/Yangruipis/lgb-convertor]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --lang LANG, -l LANG  language to convert
+  --model-json MODEL_JSON, -m MODEL_JSON
+                        lightgbm model json, dumped by `lgb_model.booster_.dump_model()`
+  -v, --version         show program's version number and exit
+```
 
 
 ### Python3
@@ -357,7 +379,7 @@ class CPPConvertor(BaseConvertor):
 
     def _lgb_to_str(self, item: LGBStatement):
         pass
-  
+
     def _func_to_str(self, item: FuncStatement):
         pass
 

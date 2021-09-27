@@ -4,15 +4,39 @@
 import argparse
 import json
 import os
+import pathlib
 import sys
 
-parser = argparse.ArgumentParser()
-parser.add_argument('--lang', default='python3')
-parser.add_argument('--model-json',)
+from lgb_convertor import __version__, e2e_convert
+
+parser = argparse.ArgumentParser(
+    description="""
+
+Description:
+============
+lgbc is a tool that convert LightGBM(aka lgb) model to
+    if-else statements of each language. \n
+
+Examples:
+=========
+- lgbc --model-json example/test_model_tiny.json --lang python3
+- lgbc -m example/test_model_tiny.json -l cpp
+
+See more at [https://github.com/Yangruipis/lgb-convertor]
+
+""",
+    formatter_class=argparse.RawTextHelpFormatter,
+)
+parser.add_argument('--lang', '-l', default='python3', type=str, help='language to convert')
+parser.add_argument(
+    '--model-json',
+    '-m',
+    type=pathlib.Path,
+    required=True,
+    help='lightgbm model json, dumped by `lgb_model.booster_.dump_model()`',
+)
+parser.add_argument('-v', '--version', action='version', version='lgbc==v%s' % __version__)
 args = parser.parse_args()
-
-
-from lgb_convertor import e2e_convert
 
 
 def main():

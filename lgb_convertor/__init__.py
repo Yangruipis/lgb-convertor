@@ -8,6 +8,7 @@
 from lgb_convertor.base.registory import convertor_registry
 from lgb_convertor.lang import *
 from lgb_convertor.lgb_convertor import parse_all
+from lgb_convertor.version import __version__
 
 
 def e2e_convert(model_json: dict, lang: str, func_name='__LGBC_predict_tree'):
