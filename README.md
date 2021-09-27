@@ -1,19 +1,21 @@
 # LGB-convertor
 [![Pre-commit](https://github.com/Yangruipis/lgb-convertor/actions/workflows/pylint.yml/badge.svg?branch=master)](https://github.com/Yangruipis/lgb-convertor/actions/workflows/pylint.yml)
 
-lgbc is a tool that convert LightGBM(aka lgb) model to an if-else statement of each language.
+lgbc is a tool that converts [LightGBM](https://github.com/microsoft/LightGBM)(aka lgb) model to if-else statements of each language.
 
-**It is useful when deploy a lgb model without LightGBM package.**
-
+**It is useful when deploying a LGB model with no LightGBM packages or any other 3rd party dependency required.** For example, as a spark UDF runs on cluster worker nodes, or on mobile perhaps.
+ 
 ## language supported
 
 | date       | lang    | test |
 |:----------:|:-------:|:----:|
 | 2021-09-21 | python3 |  [![PYTHON3](https://github.com/Yangruipis/lgb-convertor/actions/workflows/python3.yml/badge.svg?branch=master)](https://github.com/Yangruipis/lgb-convertor/actions/workflows/python3.yml)    |
-| 2021-09-24 | cpp     |  [![CPP](https://github.com/Yangruipis/lgb-convertor/actions/workflows/cpp.yml/badge.svg)](https://github.com/Yangruipis/lgb-convertor/actions/workflows/cpp.yml)    |
-| 2021-09-25 | go      |  [![GO](https://github.com/Yangruipis/lgb-convertor/actions/workflows/go.yml/badge.svg?branch=master)](https://github.com/Yangruipis/lgb-convertor/actions/workflows/go.yml)    |
+| 2021-09-24 | c++     |  [![CPP](https://github.com/Yangruipis/lgb-convertor/actions/workflows/cpp.yml/badge.svg)](https://github.com/Yangruipis/lgb-convertor/actions/workflows/cpp.yml)    |
+| 2021-09-25 | golang   |  [![GO](https://github.com/Yangruipis/lgb-convertor/actions/workflows/go.yml/badge.svg?branch=master)](https://github.com/Yangruipis/lgb-convertor/actions/workflows/go.yml)    |
 | 2021-09-26 | java    |  [![JAVA](https://github.com/Yangruipis/lgb-convertor/actions/workflows/java.yml/badge.svg?branch=master)](https://github.com/Yangruipis/lgb-convertor/actions/workflows/java.yml)    |
-
+| `TODO` | C\#    |      |
+| `TODO` |  R   |      |
+| `TODO` |  Scala   |      |
 
 ## install
 
@@ -23,15 +25,49 @@ git clone https://github.com/Yangruipis/lgb-convertor.git && cd lgb-convertor
 python setup.py install
 ```
 
-## try example
+## some examples
 
-Firstly, you need to dump your lgb model to json format:
+Firstly, your LGB model is supposed to be dumped as a dict:
 
 ```python
+from lightgbm import LGBMClassifier
+
+# train your model here
+lgb_model = LGBMClassifier(...)
+lgb_model.fit(...)
+
 model_json = lgb_model.booster_.dump_model()
 ```
 
-Then, as an input of CLI tool, your need to dump your `model_json` to a local file, such as [example/test_model_tiny.json](example/test_model_tiny.json).
+Then, if you are going to deploy with python3, just import the lgbc packages.
+
+```python
+from lgb_convertor import e2e_convert
+
+# parse model_json with lgbc
+lgb_statements = e2e_convert(model_json, 'python3')
+
+# load these funcs globally
+exec(lgb_statements, globals())
+
+# mock one sample, assume that we have 100 features
+X = np.random.rand(100)
+
+# LGB predict on X
+result = eval(f'__LGBC_predict_tree_all(X)')
+```
+
+Also, if you wanna convert it to other languages instead of python3, you should call it as an command line tool. Dump your `model_json`, just like [example/test_model_tiny.json](example/test_model_tiny.json).
+
+```python
+import json
+with open('/YOUR/MODEL_JSON/PATH', 'w') as f:
+    json.dump(model_json, f, indent=4)
+```
+
+Then, you call use the lgbc command line as follow:
+
+
 
 ### Python3
 
@@ -309,7 +345,7 @@ pytest tests
 
 ### support more language
 
-Please impl your own convertor of the language you need. Below is an example for cpp, you should overwrite those eight `_to_str` functions. More details are in [./lgb_convertor/lang/cpp.py](./lgb_convertor/lang/cpp.py).
+Please impl your own convertor of the language you need. Below is an example for cpp, you should overwrite those nine `_to_str` functions. More details are in [./lgb_convertor/lang/cpp.py](./lgb_convertor/lang/cpp.py).
 
 ```python
 from lgb_convertor.base.convertor import BaseConvertor
@@ -318,6 +354,10 @@ from lgb_convertor.base.registory import register
 
 @register('cpp')
 class CPPConvertor(BaseConvertor):
+
+    def _lgb_to_str(self, item: LGBStatement):
+        pass
+  
     def _func_to_str(self, item: FuncStatement):
         pass
 
