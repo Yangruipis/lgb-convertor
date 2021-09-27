@@ -67,7 +67,7 @@ def run_go(model_json):
 
     try:
         _run_cmd(cmd)
-    except e:
+    except Exception as e:
         raise e
     finally:
         _remove(file_path)
@@ -86,7 +86,7 @@ def run_cpp(model_json):
     cmd = f'g++ {file_path} -o tmp.bin && ./tmp.bin && rm ./tmp.bin'
     try:
         _run_cmd(cmd)
-    except e:
+    except Exception as e:
         raise e
     finally:
         _remove(file_path)
@@ -106,7 +106,7 @@ def run_java(model_json):
     cmd = f'javac {main_path} {lgb_path} -d ./ && java Alignment'
     try:
         _run_cmd(cmd)
-    except e:
+    except Exception as e:
         raise e
     finally:
         _remove(lgb_path)
